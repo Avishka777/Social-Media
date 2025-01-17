@@ -74,3 +74,22 @@ exports.deleteUser = async (req, res) => {
       .json({ error: "Failed to delete user", details: error.message });
   }
 };
+
+// Get user details
+exports.getUserDetails = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const user = await User.findByPk(id, {
+        attributes: { exclude: ["password"] }, // Exclude sensitive data
+      });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+  
+      res.status(200).json({ user });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve user details", details: error.message });
+    }
+  };
+  
