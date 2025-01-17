@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 // Register a new user
 exports.registerUser = async (req, res) => {
@@ -77,19 +78,52 @@ exports.deleteUser = async (req, res) => {
 
 // Get user details
 exports.getUserDetails = async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      const user = await User.findByPk(id, {
-        attributes: { exclude: ["password"] }, // Exclude sensitive data
-      });
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-  
-      res.status(200).json({ user });
-    } catch (error) {
-      res.status(500).json({ error: "Failed to retrieve user details", details: error.message });
+  const { id } = req.params;
+
+  try {
+    const user = await User.findByPk(id, {
+      attributes: { exclude: ["password"] }, // Exclude sensitive data
+    });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
-  };
-  
+
+    res.status(200).json({ user });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        error: "Failed to retrieve user details",
+        details: error.message,
+      });
+  }
+};
+
+// Login user
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Compare the password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET || "your_jwt_secret",
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({ message: "Login successful", token });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to log in", details: error.message });
+  }
+};
