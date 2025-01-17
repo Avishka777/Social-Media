@@ -1,6 +1,6 @@
 const express = require("express");
 const { body } = require("express-validator");
-const { registerUser, updateUser } = require("../controllers/userController");
+const { registerUser, updateUser, deleteUser } = require("../controllers/userController");
 
 const router = express.Router();
 
@@ -20,15 +20,26 @@ router.post(
 );
 
 router.put(
-    "/:id",
-    [
-      body("firstName").optional().notEmpty().withMessage("First name cannot be empty"),
-      body("lastName").optional().notEmpty().withMessage("Last name cannot be empty"),
-      body("email").optional().isEmail().withMessage("Invalid email address"),
-      body("birthday").optional().notEmpty().withMessage("Birthday cannot be empty"),
-    ],
-    updateUser
-  );
-  
+  "/:id",
+  [
+    body("firstName")
+      .optional()
+      .notEmpty()
+      .withMessage("First name cannot be empty"),
+    body("lastName")
+      .optional()
+      .notEmpty()
+      .withMessage("Last name cannot be empty"),
+    body("email").optional().isEmail().withMessage("Invalid email address"),
+    body("birthday")
+      .optional()
+      .notEmpty()
+      .withMessage("Birthday cannot be empty"),
+  ],
+  updateUser
+);
+
+router.delete("/:id", deleteUser);
+
 
 module.exports = router;
