@@ -29,3 +29,23 @@ exports.registerUser = async (req, res) => {
     res.status(500).json({ error: "Failed to register user", details: error.message });
   }
 };
+
+// Update user details
+exports.updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { firstName, lastName, email, birthday } = req.body;
+  
+    try {
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+  
+      // Update user details
+      await user.update({ firstName, lastName, email, birthday });
+      res.status(200).json({ message: "User updated successfully", user });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update user", details: error.message });
+    }
+  };
+  
