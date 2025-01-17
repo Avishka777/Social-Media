@@ -90,12 +90,10 @@ exports.getUserDetails = async (req, res) => {
 
     res.status(200).json({ user });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Failed to retrieve user details",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Failed to retrieve user details",
+      details: error.message,
+    });
   }
 };
 
