@@ -1,0 +1,18 @@
+.header {
+    background-color: rgba(0, 0, 0, 0.5);  /* Glass effect */
+    padding: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+  
+  nav a:hover {
+    text-decoration: underline;
+  }
+  
