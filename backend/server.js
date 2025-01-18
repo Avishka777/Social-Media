@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const sequelize = require("./config/database");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/post.routes");
+const likeRoutes = require("./routes/like.route");
+const commentRoutes = require("./routes/comment.route");
 
 const app = express();
 
@@ -12,6 +14,8 @@ app.use(bodyParser.json());
 // Routes
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
+app.use("/like", likeRoutes);
+app.use("/comment", commentRoutes);
 
 
 // Test the connection and sync models
