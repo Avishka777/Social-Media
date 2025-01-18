@@ -1,6 +1,6 @@
 const Like = require("../models/like.model");
 
-// Toggle like on a post
+// Toggle like on a post -----------------------------------------------------------
 exports.toggleLike = async (req, res) => {
   const { postId } = req.params;
   const userId = req.user.id;
@@ -18,6 +18,8 @@ exports.toggleLike = async (req, res) => {
     await Like.create({ userId, postId });
     res.status(201).json({ message: "Post liked" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to toggle like", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to toggle like", details: error.message });
   }
 };

@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { validationResult } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 
@@ -43,6 +43,15 @@ exports.registerUser = async (req, res) => {
 
 // Login user -----------------------------------------------------------------
 exports.loginUser = async (req, res) => {
+  // Validation logic
+  await body("email").isEmail().withMessage("Invalid email address").run(req);
+  await body("password").notEmpty().withMessage("Password is required").run(req);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { email, password } = req.body;
 
   try {
@@ -60,7 +69,7 @@ exports.loginUser = async (req, res) => {
     // Generate a JWT token
     const token = jwt.sign(
       { id: user.id, email: user.email },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "your_jwt_secret",
       { expiresIn: "24h" }
     );
 

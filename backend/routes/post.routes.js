@@ -8,6 +8,7 @@ const { body } = require("express-validator");
 // Configure Multer for file uploads
 const upload = multer({ dest: "uploads/" });
 
+// Route for create post ----------------------------------------------------------
 router.post(
   "/create",
   authenticateJWT,
@@ -15,25 +16,16 @@ router.post(
   postController.createPost
 );
 
-// Update a post
-router.put(
-  "/:postId",
-  authenticateJWT,
-  body("title").optional().notEmpty().withMessage("Title cannot be empty"),
-  body("location").optional(),
-  postController.updatePost
-);
+// Route for update a post --------------------------------------------------------
+router.put("/:postId", authenticateJWT, postController.updatePost);
 
-// Get a post by ID
+// Route for get a post by ID -----------------------------------------------------
 router.get("/:postId", authenticateJWT, postController.getPostById);
 
-// Get all posts
+// Route for get all posts --------------------------------------------------------
 router.get("/", authenticateJWT, postController.getAllPosts);
 
-// Delete a post
+// Route for delete a post --------------------------------------------------------
 router.delete("/:postId", authenticateJWT, postController.deletePost);
-
-router.post("/:postId/comment", authenticateJWT, postController.addComment);
-router.post("/:postId/like", authenticateJWT, postController.toggleLike);
 
 module.exports = router;
