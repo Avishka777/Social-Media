@@ -1,10 +1,10 @@
 const express = require("express");
-const { body } = require("express-validator");
-const { registerUser, updateUser, deleteUser, getUserDetails, loginUser } = require("../controllers/userController");
-
 const router = express.Router();
+const { body } = require("express-validator");
+const authenticateJWT = require("../middleware/authMiddleware");
+const userController = require("../controllers/userController");
 
-// Validation and route for registration
+// Validation and route for registration  ----------------------------------------
 router.post(
   "/register",
   [
@@ -16,42 +16,26 @@ router.post(
       .withMessage("Password must be at least 6 characters long"),
     body("birthday").notEmpty().withMessage("Birthday is required"),
   ],
-  registerUser
+  userController.registerUser
 );
 
-router.put(
-  "/:id",
-  [
-    body("firstName")
-      .optional()
-      .notEmpty()
-      .withMessage("First name cannot be empty"),
-    body("lastName")
-      .optional()
-      .notEmpty()
-      .withMessage("Last name cannot be empty"),
-    body("email").optional().isEmail().withMessage("Invalid email address"),
-    body("birthday")
-      .optional()
-      .notEmpty()
-      .withMessage("Birthday cannot be empty"),
-  ],
-  updateUser
-);
-
-router.delete("/:id", deleteUser);
-
-router.get("/:id", getUserDetails);
-
+// Validation and route for login ------------------------------------------------
 router.post(
-    "/login",
-    [
-      body("email").isEmail().withMessage("Invalid email address"),
-      body("password").notEmpty().withMessage("Password is required"),
-    ],
-    loginUser
-  );
-  
+  "/login",
+  [
+    body("email").isEmail().withMessage("Invalid email address"),
+    body("password").notEmpty().withMessage("Password is required"),
+  ],
+  userController.loginUser
+);
 
+// Route for view user  ----------------------------------------------------------
+router.get("/profile", authenticateJWT, userController.getUserProfile);
+
+// Route for update user  --------------------------------------------------------
+router.put("/update", authenticateJWT, userController.updateUser);
+
+// Route for delete user  --------------------------------------------------------
+router.delete("/delete", authenticateJWT, userController.deleteUser);
 
 module.exports = router;
