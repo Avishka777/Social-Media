@@ -1,6 +1,9 @@
 const Post = require("../models/post.model");
-const User = require('../models/user.model');
+const User = require("../models/user.model");
+const Like = require("../models/like.model");
 const Comment = require("../models/comment.model");
+const { Sequelize } = require("sequelize");
+const sequelize = require("../config/database");
 const { body, validationResult } = require("express-validator");
 
 // Create a new post  -------------------------------------------------------
@@ -98,25 +101,40 @@ exports.getAllPosts = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['firstName', 'lastName'],
+          attributes: ["firstName", "lastName"],
         },
         {
           model: Comment,
-          attributes: ['content', 'userId'], // Add necessary attributes for the comments
+          attributes: ["content"],
           include: [
             {
               model: User,
-              attributes: ['firstName', 'lastName'], // Add user details for each comment
+              attributes: ["firstName", "lastName"],
             },
           ],
         },
+        {
+          model: Like,
+          attributes: [],
+        },
       ],
+      attributes: {
+        include: [
+          [
+            sequelize.fn("COUNT", sequelize.col("Likes.id")),
+            "likeCount", // This will add the count of likes as 'likeCount'
+          ],
+        ],
+      },
+      group: ["Post.id", "User.id", "Comments.id", "Likes.id"],
     });
 
     res.status(200).json({ posts });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to retrieve posts', details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve posts", details: error.message });
   }
 };
 
