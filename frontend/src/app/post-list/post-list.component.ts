@@ -10,51 +10,7 @@ import Swal from 'sweetalert2';
   selector: 'app-post-list',
   standalone: true,
   imports: [CommonModule, HttpClientModule, FormsModule, PostcardComponent],
-  template: `
-    <div *ngIf="posts.length === 0">Loading posts...</div>
-    <app-postcard
-      *ngFor="let post of posts"
-      [post]="post"
-      (delete)="onDelete($event)"
-      (update)="onUpdate($event)"
-    ></app-postcard>
-
-    <!-- Update Modal -->
-    <div
-      *ngIf="isEditing"
-      class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
-    >
-      <div class="bg-white p-4 rounded-lg w-96 shadow-lg">
-        <h3 class="text-lg font-semibold mb-4">Update Post</h3>
-        <label class="block text-sm font-medium mb-1">Title</label>
-        <input
-          type="text"
-          [(ngModel)]="updatedTitle"
-          class="w-full p-2 border rounded-md mb-4"
-        />
-        <label class="block text-sm font-medium mb-1">Location</label>
-        <input
-          type="text"
-          [(ngModel)]="updatedLocation"
-          class="w-full p-2 border rounded-md mb-4"
-        />
-        <div class="flex justify-end">
-          <button
-            class="px-4 py-2 bg-gray-300 rounded-md mr-2"
-            (click)="closeModal()"
-          >
-            Cancel
-          </button>
-          <button
-            class="px-4 py-2 bg-blue-500 text-white rounded-md"
-            (click)="saveUpdate()"
-          >
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent implements OnInit {
@@ -130,16 +86,16 @@ export class PostListComponent implements OnInit {
       };
 
       this.http
-        .put(
-          `http://localhost:3000/posts/${this.currentPostId}`,
-          updatedData,
-          { headers }
-        )
+        .put(`http://localhost:3000/posts/${this.currentPostId}`, updatedData, {
+          headers,
+        })
         .subscribe(
           (updatedPost: any) => {
             // Update the post in the list
             this.posts = this.posts.map((post) =>
-              post.id === this.currentPostId ? { ...post, ...updatedPost } : post
+              post.id === this.currentPostId
+                ? { ...post, ...updatedPost }
+                : post
             );
             Swal.fire('Updated!', 'Your post has been updated.', 'success');
             this.closeModal();

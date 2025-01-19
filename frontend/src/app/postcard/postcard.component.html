@@ -26,10 +26,10 @@
     <!-- Action Menu -->
     <div
       *ngIf="menuOpen"
-      class="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md"
+      class="relative right-0 mt-2 w-32 bg-white shadow-lg rounded-md"
     >
       <button
-        class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
+        class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100 text-black"
         (click)="onUpdate(post.id)"
       >
         Update
@@ -43,7 +43,7 @@
     </div>
   </div>
   <div>
-    <h2 class="text-lg font-semibold">{{ post.title }}</h2>
+    <h2 class="text-lg font-semibold text-gray-500">{{ post.title }}</h2>
   </div>
   <!-- Post Image -->
   <div class="my-4">
