@@ -1,39 +1,29 @@
-import { Component, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // <-- Import FormsModule
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';  // Import CommonModule for *ngIf and *ngFor
+import { DatePipe } from '@angular/common'; // Import DatePipe to use the 'date' pipe
 
 @Component({
   selector: 'app-postcard',
   standalone: true,
-  imports: [CommonModule, FormsModule],  // <-- Add FormsModule here
+  imports: [CommonModule],  // Add CommonModule here
   templateUrl: './postcard.component.html',
   styleUrls: ['./postcard.component.css'],
 })
 export class PostcardComponent {
-  @Input() post: any; // Post data passed from parent
-  comments: string[] = []; // List of comments
-  newComment: string = ''; // Input for adding a comment
-  showComments: boolean = false; // Toggle for showing comments
-  likeCount: number = 0; // Count for likes
+  @Input() post: any;
+  @Output() delete = new EventEmitter<number>();
+  @Output() update = new EventEmitter<number>();
+  menuOpen = false;
 
-  constructor(private http: HttpClient) {}
-
-  // Increment likes
-  addLike() {
-    this.likeCount++;
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 
-  // Add a new comment
-  addComment() {
-    if (this.newComment.trim()) {
-      this.comments.push(this.newComment.trim());
-      this.newComment = ''; // Reset input
-    }
+  onDelete(postId: number) {
+    this.delete.emit(postId);
   }
 
-  // Toggle comments visibility
-  toggleComments() {
-    this.showComments = !this.showComments;
+  onUpdate(postId: number) {
+    this.update.emit(postId);
   }
 }
