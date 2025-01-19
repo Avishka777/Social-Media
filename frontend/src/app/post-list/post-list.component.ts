@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'; // <-- Import HttpClientModule
@@ -21,8 +21,16 @@ export class PostListComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get('http://localhost:3000/posts').subscribe((data: any) => {
-      this.posts = data;
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('authToken');
+    
+    // Prepare headers with the token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Send the GET request with the token in the headers
+    this.http.get<any>('http://localhost:3000/posts', { headers }).subscribe((data: any) => {
+      // Access the 'posts' array from the response object
+      this.posts = data.posts; // Assuming the response has the key 'posts' that holds the array
     });
   }
 }
