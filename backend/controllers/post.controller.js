@@ -1,4 +1,5 @@
 const Post = require("../models/post.model");
+const User = require('../models/user.model');
 const { body, validationResult } = require("express-validator");
 
 // Create a new post  -------------------------------------------------------
@@ -92,12 +93,18 @@ exports.getPostById = async (req, res) => {
 // Get all posts  -----------------------------------------------------------
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.findAll();
+    const posts = await Post.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['firstName', 'lastName'],
+        },
+      ],
+    });
     res.status(200).json({ posts });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to retrieve posts", details: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Failed to retrieve posts', details: error.message });
   }
 };
 

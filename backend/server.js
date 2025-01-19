@@ -6,6 +6,7 @@ const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/post.routes");
 const likeRoutes = require("./routes/like.route");
 const commentRoutes = require("./routes/comment.route");
+require('./models/associations');
 
 const app = express();
 
@@ -20,11 +21,12 @@ app.use("/like", likeRoutes);
 app.use("/comment", commentRoutes);
 
 // Test the connection and sync models
-sequelize
-  .sync({ force: false }) // Change to `true` during development to reset tables
+sequelize.sync({ alter: true })
   .then(() => {
     app.listen(3000, () => {
-      console.log("Server running on http://localhost:3000");
+      console.log('Server running on http://localhost:3000');
     });
   })
-  .catch((err) => console.log("Error syncing database: " + err));
+  .catch((error) => {
+    console.error('Unable to sync database:', error);
+  });
