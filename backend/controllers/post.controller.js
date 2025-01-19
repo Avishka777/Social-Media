@@ -1,5 +1,6 @@
 const Post = require("../models/post.model");
 const User = require('../models/user.model');
+const Comment = require("../models/comment.model");
 const { body, validationResult } = require("express-validator");
 
 // Create a new post  -------------------------------------------------------
@@ -99,8 +100,19 @@ exports.getAllPosts = async (req, res) => {
           model: User,
           attributes: ['firstName', 'lastName'],
         },
+        {
+          model: Comment,
+          attributes: ['content', 'userId'], // Add necessary attributes for the comments
+          include: [
+            {
+              model: User,
+              attributes: ['firstName', 'lastName'], // Add user details for each comment
+            },
+          ],
+        },
       ],
     });
+
     res.status(200).json({ posts });
   } catch (error) {
     console.error(error);
