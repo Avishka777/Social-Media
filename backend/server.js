@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors"); // Importing cors
 const sequelize = require("./config/database");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/post.routes");
@@ -10,13 +11,13 @@ const app = express();
 
 // Middleware
 app.use(bodyParser.json());
+app.use(cors()); // This enables CORS for all routes
 
 // Routes
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/like", likeRoutes);
 app.use("/comment", commentRoutes);
-
 
 // Test the connection and sync models
 sequelize
