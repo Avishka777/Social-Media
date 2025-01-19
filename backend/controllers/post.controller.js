@@ -18,7 +18,7 @@ exports.createPost = async (req, res) => {
   try {
     const post = await Post.create({
       title,
-      imageUrl: req.file.path, // Path of uploaded image
+      imageUrl: `http://localhost:3000/uploads/${req.file.filename}`,
       location,
       userId,
     });

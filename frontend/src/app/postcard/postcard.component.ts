@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // For ngModel
-import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { io, Socket } from 'socket.io-client';
 
 @Component({
   selector: 'app-postcard',
@@ -12,64 +13,40 @@ import Swal from 'sweetalert2';
 })
 export class PostcardComponent {
   @Input() post: any;
-  @Output() delete = new EventEmitter<number>();
-  @Output() update = new EventEmitter<any>();
 
-  menuOpen = false;
   commentsVisible = false;
-  isEditing = false;
+  private socket: Socket;
 
-  updatedTitle = '';
-  updatedLocation = '';
+  constructor(private http: HttpClient) {
+    // Initialize socket connection
+    this.socket = io('http://localhost:3000');
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
+    // Listen for real-time updates
+    this.socket.on('postUpdated', (updatedPost: any) => {
+      if (this.post.id === updatedPost.id) {
+        this.post.likeCount = updatedPost.likeCount;
+      }
+    });
   }
 
   toggleComments() {
     this.commentsVisible = !this.commentsVisible;
   }
 
-  onUpdate(postId: number) {
-    this.isEditing = true;
-    this.updatedTitle = this.post.title;
-    this.updatedLocation = this.post.location;
-  }
+  likePost() {
+    const token = localStorage.getItem('authToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-  saveUpdate() {
-    if (this.updatedTitle && this.updatedLocation) {
-      const updatedPost = {
-        ...this.post,
-        title: this.updatedTitle,
-        location: this.updatedLocation,
-      };
-      this.update.emit(updatedPost);
-      this.isEditing = false;
-    } else {
-      Swal.fire('Error', 'Both fields must be filled!', 'error');
-    }
-  }
-
-  onDelete(postId: number) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to delete this post?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.delete.emit(postId);
-        Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
-      } else {
-        Swal.fire('Cancelled', 'Your post is safe!', 'info');
-      }
-    });
-  }
-
-  closeModal() {
-    this.isEditing = false;
+    this.http
+      .post(`http://localhost:3000/like/${this.post.id}`, {}, { headers })
+      .subscribe(
+        (response: any) => {
+          // Update the like count locally
+          this.post.likeCount += response.message === 'Post liked' ? 1 : -1;
+        },
+        (error) => {
+          console.error('Error liking the post:', error);
+        }
+      );
   }
 }
