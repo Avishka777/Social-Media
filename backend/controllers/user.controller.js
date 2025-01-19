@@ -45,7 +45,10 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   // Validation logic
   await body("email").isEmail().withMessage("Invalid email address").run(req);
-  await body("password").notEmpty().withMessage("Password is required").run(req);
+  await body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .run(req);
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -73,7 +76,14 @@ exports.loginUser = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    res
+      .status(200)
+      .json({
+        message: "Login successful",
+        token,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
   } catch (error) {
     res.status(500).json({ error: "Failed to log in", details: error.message });
   }
