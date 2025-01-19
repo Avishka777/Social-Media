@@ -1,129 +1,113 @@
-<div
-  class="max-w-xl mx-auto my-6 bg-white rounded-lg shadow-lg overflow-hidden"
->
+<div class="max-w-xl mx-auto my-4 p-4 bg-white rounded-lg shadow-md">
   <!-- Post Header -->
-  <div class="relative flex items-center px-4 py-3">
-    <img
-      class="h-10 w-10 rounded-full object-cover"
-      src="https://img.freepik.com/free-photo/3d-illustration-funny-cartoon-man-with-mobile-phone_1057-44838.jpg?t=st=1737282769~exp=1737286369~hmac=0082c43c9096310ea60f8d7296f485a0c67c707ab4963332439317788f9e2afb&w=740"
-      alt="User Profile"
-    />
-    <div class="ml-3">
-      <p class="text-gray-800 font-semibold">
-        {{ post.User.firstName }} {{ post.User.lastName }}
-      </p>
-      <p class="text-gray-500 text-sm">
-        {{ post.uploadDate | date : "short" }}
-      </p>
-    </div>
-
-    <!-- 3-Dot Menu -->
-    <div class="absolute top-3 right-4">
-      <button (click)="toggleMenu()" class="text-gray-500 hover:text-gray-800">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-      <div
-        *ngIf="menuOpen"
-        class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-10"
-      >
-        <ul class="text-sm text-gray-700">
-          <li
-            (click)="onUpdate(post.id)"
-            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-          >
-            Update Post
-          </li>
-          <li
-            (click)="onDelete(post.id)"
-            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-          >
-            Delete Post
-          </li>
-        </ul>
+  <div class="flex items-center justify-between">
+    <div class="flex gap-2">
+      <img
+        class="h-10 w-10 rounded-full object-cover"
+        src="https://img.freepik.com/free-photo/3d-illustration-funny-cartoon-man-with-mobile-phone_1057-44838.jpg?t=st=1737282769~exp=1737286369~hmac=0082c43c9096310ea60f8d7296f485a0c67c707ab4963332439317788f9e2afb&w=740"
+        alt="User Profile"
+      />
+      <div>
+        <p class="text-gray-500 text-sm">
+          By {{ post.User.firstName }} {{ post.User.lastName }}
+        </p>
+        <p class="text-gray-500 text-xs">
+          {{ post.uploadDate | date : "short" }}
+        </p>
       </div>
     </div>
-  </div>
+    <button
+      class="p-2 text-gray-500 hover:bg-gray-200 rounded-full"
+      (click)="toggleMenu()"
+    >
+      ⋮
+    </button>
 
-  <!-- Post Content -->
-  <div class="px-4 py-2">
-    <h3 class="text-lg font-semibold text-gray-800">{{ post.title }}</h3>
-    <p class="text-gray-700">{{ post.location }}</p>
+    <!-- Action Menu -->
+    <div
+      *ngIf="menuOpen"
+      class="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md"
+    >
+      <button
+        class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
+        (click)="onUpdate(post.id)"
+      >
+        Update
+      </button>
+      <button
+        class="block w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-100"
+        (click)="onDelete(post.id)"
+      >
+        Delete
+      </button>
+    </div>
   </div>
-
-  <!-- Post Image -->
   <div>
+    <h2 class="text-lg font-semibold">{{ post.title }}</h2>
+  </div>
+  <!-- Post Image -->
+  <div class="my-4">
     <img
-      class="w-full h-auto"
-      src="https://img.freepik.com/free-photo/fishing-boat_335224-1006.jpg?t=st=1737282809~exp=1737286409~hmac=bd94e3e159eae2007a931169b05dc742a0914793eb879c04a0b9382d602c9484&w=996"
-      alt="Post Image"
+      [src]="post.imageUrl"
+      alt="{{ post.title }}"
+      class="w-full h-48 object-cover rounded-md"
     />
   </div>
 
-  <!-- Post Actions -->
-  <div class="flex items-center justify-between px-4 py-3 border-t">
-    <button class="flex items-center text-gray-500 hover:text-blue-500">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-6 h-6 mr-1"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M14.25 8.25c.914 0 1.648-.762 1.75-1.718a1.75 1.75 0 00-3.406-.564M9.75 15.75H5.25m1.5-3h6m-7.5-2.25h4.5M15.75 16.5v-4.242a.75.75 0 10-1.5 0V16.5m1.5 0a.75.75 0 11-1.5 0v-4.242"
-        />
-      </svg>
-      Like
-    </button>
-    <button class="flex items-center text-gray-500 hover:text-green-500">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-6 h-6 mr-1"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M8.25 15.75H4.5a.75.75 0 01-.75-.75V8.25a.75.75 0 01.75-.75H9m0 8.25h10.5a.75.75 0 00.75-.75V8.25a.75.75 0 00-.75-.75H9m0 8.25v-4.5m0 0H4.5M9 12.75h10.5m-10.5 0v-4.5m0 4.5H4.5"
-        />
-      </svg>
-      Comment
-    </button>
-    <button class="flex items-center text-gray-500 hover:text-red-500">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-6 h-6 mr-1"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-      Share
-    </button>
+  <!-- Like and Comment Summary -->
+  <div class="flex justify-between items-center">
+    <p class="text-gray-600">Likes: {{ post.likeCount }}</p>
+    <p class="text-gray-600 cursor-pointer" (click)="toggleComments()">
+      {{ post.Comments.length }} Comments
+    </p>
+  </div>
+
+  <!-- Comments Section -->
+  <div *ngIf="commentsVisible" class="mt-4 max-h-32 overflow-y-auto">
+    <div
+      *ngFor="let comment of post.Comments"
+      class="border-b border-gray-200 py-2"
+    >
+      <p class="text-gray-700 text-sm">{{ comment.content }}</p>
+      <p class="text-gray-500 text-xs">
+        By {{ comment.User.firstName }} {{ comment.User.lastName }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Update Modal -->
+  <div
+    *ngIf="isEditing"
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
+  >
+    <div class="bg-white p-4 rounded-lg w-96 shadow-lg">
+      <h3 class="text-lg font-semibold mb-4">Update Post</h3>
+      <label class="block text-sm font-medium mb-1">Title</label>
+      <input
+        type="text"
+        [(ngModel)]="updatedTitle"
+        class="w-full p-2 border rounded-md mb-4"
+      />
+      <label class="block text-sm font-medium mb-1">Location</label>
+      <input
+        type="text"
+        [(ngModel)]="updatedLocation"
+        class="w-full p-2 border rounded-md mb-4"
+      />
+      <div class="flex justify-end">
+        <button
+          class="px-4 py-2 bg-gray-300 rounded-md mr-2"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-4 py-2 bg-blue-500 text-white rounded-md"
+          (click)="saveUpdate()"
+        >
+          Save
+        </button>
+      </div>
+    </div>
   </div>
 </div>
