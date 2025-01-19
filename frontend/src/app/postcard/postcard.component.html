@@ -1,0 +1,33 @@
+<div class="postcard">
+    <div class="post-header">
+      <h2>{{ post.title }}</h2>
+      <p class="post-user">By User {{ post.userId }}</p>
+      <p class="post-date">{{ post.uploadDate | date:'medium' }}</p>
+      <p class="post-location">📍 {{ post.location }}</p>
+    </div>
+  
+    <div class="post-image">
+      <img [src]="'http://localhost:3000/' + post.imageUrl" alt="{{ post.title }}" />
+    </div>
+  
+    <div class="post-actions">
+      <button (click)="addLike()">👍 Like ({{ likeCount }})</button>
+      <button (click)="toggleComments()">💬 View Comments</button>
+    </div>
+  
+    <!-- Comments Section -->
+    <div class="post-comments" *ngIf="showComments">
+      <div class="add-comment">
+        <input
+          [(ngModel)]="newComment"
+          placeholder="Add a comment..."
+          (keyup.enter)="addComment()"
+        />
+        <button (click)="addComment()">Add Comment</button>
+      </div>
+      <ul>
+        <li *ngFor="let comment of comments">{{ comment }}</li>
+      </ul>
+    </div>
+  </div>
+  
