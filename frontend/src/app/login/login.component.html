@@ -1,36 +1,72 @@
-<div class="login-container">
-    <h2>Login</h2>
-  
-    <form (submit)="onLogin()" #loginForm="ngForm">
-      <div class="form-group">
-        <label for="email">Email:</label>
+<div
+  class="flex justify-center items-center h-screen bg-gradient-to-r from-blue-800 to-indigo-900"
+>
+  <!-- Glassmorphism Container -->
+  <div
+    class="flex flex-col items-center p-8 max-w-lg w-full glassmorphism rounded-lg shadow-2xl mx-8 backdrop-blur-md bg-opacity-30"
+  >
+    <!-- Logo -->
+    <img src="logo.png" alt="Logo" class="h-16 mb-5" />
+
+    <!-- Title -->
+    <div class="text-4xl mb-3 text-center font-serif text-white">LOGIN</div>
+    <hr class="shadow-lg mb-2 w-full bg-white" />
+
+    <!-- Login Form -->
+    <form class="flex flex-col gap-4 w-full" (ngSubmit)="onSubmit()">
+      <!-- Email Input -->
+      <div class="flex flex-col">
+        <label for="email" class="text-white">Email:</label>
         <input
-          id="email"
           type="email"
+          id="email"
           [(ngModel)]="email"
           name="email"
+          class="mt-1 p-3 rounded-md bg-white bg-opacity-20 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter Email Address"
           required
-          placeholder="Enter your email"
-          class="form-control"
         />
       </div>
-  
-      <div class="form-group">
-        <label for="password">Password:</label>
+
+      <!-- Password Input -->
+      <div class="flex flex-col">
+        <label for="password" class="text-white">Password:</label>
         <input
+          [type]="showPassword ? 'text' : 'password'"
           id="password"
-          type="password"
           [(ngModel)]="password"
           name="password"
+          class="mt-1 p-3 rounded-md bg-white bg-opacity-20 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter Password"
           required
-          placeholder="Enter your password"
-          class="form-control"
         />
       </div>
-  
-      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-  
-      <button type="submit" [disabled]="!loginForm.valid" class="btn">Login</button>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="w-full bg-blue-500 text-white py-3 rounded-md mt-4 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <div *ngIf="loading" class="flex justify-center items-center">
+          <span class="spinner-border spinner-border-sm"></span>
+          <span class="pl-3">Loading...</span>
+        </div>
+        <span *ngIf="!loading">Log In</span>
+      </button>
     </form>
+
+    <!-- Sign Up Link -->
+    <div class="flex gap-2 text-sm mt-5 font-serif text-white">
+      <span>Do not have an account?</span>
+      <a href="/sign-up" class="text-blue-400">Sign Up</a>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="mt-5 w-full text-red-500">
+      <div class="bg-red-100 p-3 rounded-md text-center">
+        {{ errorMessage }}
+      </div>
+    </div>
   </div>
-  
+</div>
