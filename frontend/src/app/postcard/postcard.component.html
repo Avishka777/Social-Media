@@ -4,7 +4,7 @@
     <div class="flex gap-2">
       <img
         class="h-10 w-10 rounded-full object-cover"
-        src="https://img.freepik.com/free-photo/3d-illustration-funny-cartoon-man-with-mobile-phone_1057-44838.jpg?t=st=1737282769~exp=1737286369~hmac=0082c43c9096310ea60f8d7296f485a0c67c707ab4963332439317788f9e2afb&w=740"
+        src="https://img.freepik.com/free-photo/3d-illustration-funny-cartoon-man-with-mobile-phone_1057-44838.jpg"
         alt="User Profile"
       />
       <div>
@@ -16,12 +16,53 @@
         </p>
       </div>
     </div>
+    <!-- Action Buttons -->
+    <div class="flex gap-2">
+      <button
+        class="px-2 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+        (click)="openUpdateModal()"
+      >
+        <!-- Update Icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 3h8v8h-8zM9 3H3v8h6zM3 9h6v6H3zM13 9h8v6h-8zM3 15h6v6H3zM13 15h8v6h-8z"
+          />
+        </svg>
+      </button>
+      <button
+        class="px-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+        (click)="deletePost()"
+      >
+        <!-- Delete Icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
 
   <!-- Post Title -->
-  <div>
-    <h2 class="text-lg font-semibold text-gray-500">{{ post.title }}</h2>
-  </div>
+  <h2 class="text-lg font-semibold text-gray-500">{{ post.title }}</h2>
 
   <!-- Post Image -->
   <div class="my-4">
@@ -32,10 +73,10 @@
     />
   </div>
 
-  <!-- Like Button and Comment Summary -->
+  <!-- Like and Comments Section -->
   <div class="flex justify-between items-center">
     <button
-      class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-500"
+      class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
       (click)="likePost()"
     >
       Like
@@ -48,14 +89,45 @@
 
   <!-- Comments Section -->
   <div *ngIf="commentsVisible" class="mt-4 max-h-32 overflow-y-auto">
-    <div
-      *ngFor="let comment of post.Comments"
-      class="border-b border-gray-200 py-2"
-    >
+    <div *ngFor="let comment of post.Comments" class="border-b py-2">
       <p class="text-gray-700 text-sm">{{ comment.content }}</p>
       <p class="text-gray-500 text-xs">
         By {{ comment.User.firstName }} {{ comment.User.lastName }}
       </p>
+    </div>
+  </div>
+
+  <!-- Update Modal -->
+  <div
+    *ngIf="isEditing"
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
+  >
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Update Post</h3>
+      <input
+        [(ngModel)]="updatedTitle"
+        placeholder="Title"
+        class="w-full mb-2 p-2 border rounded-md"
+      />
+      <input
+        [(ngModel)]="updatedLocation"
+        placeholder="Location"
+        class="w-full mb-2 p-2 border rounded-md"
+      />
+      <div class="flex justify-end">
+        <button
+          class="px-4 py-2 bg-gray-300 rounded-md mr-2"
+          (click)="closeUpdateModal()"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-4 py-2 bg-blue-500 text-white rounded-md"
+          (click)="saveUpdate()"
+        >
+          Save
+        </button>
+      </div>
     </div>
   </div>
 </div>
