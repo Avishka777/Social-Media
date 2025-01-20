@@ -16,16 +16,13 @@
         </p>
       </div>
     </div>
-    <!-- Action Buttons -->
-    <div class="flex gap-2">
-      <button
-        class="px-2 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-        (click)="openUpdateModal()"
-      >
-        <!-- Update Icon -->
+    <!-- Action Buttons (only visible if user is the post owner) -->
+    <div class="flex gap-2" *ngIf="isOwner">
+      <button (click)="openUpdateModal()">
+        <!-- Edit Icon -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
+          class="h-6 w-6 text-green-500 hover:text-green-700"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -34,18 +31,15 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M13 3h8v8h-8zM9 3H3v8h6zM3 9h6v6H3zM13 9h8v6h-8zM3 15h6v6H3zM13 15h8v6h-8z"
+            d="M11 17l-2 2m0 0l-7-7m7 7V3m8 2l-2 2m0 0l-7-7m7 7h4"
           />
         </svg>
       </button>
-      <button
-        class="px-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-        (click)="deletePost()"
-      >
+      <button (click)="deletePost()">
         <!-- Delete Icon -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
+          class="h-6 w-6 text-red-500 hover:text-red-700"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -75,13 +69,25 @@
 
   <!-- Like and Comments Section -->
   <div class="flex justify-between items-center">
-    <button
-      class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-      (click)="likePost()"
-    >
-      Like
-    </button>
-    <p class="text-gray-600">Likes: {{ post.likeCount }}</p>
+    <div class="flex">
+      <button class="flex items-center gap-1" (click)="likePost()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          [ngClass]="post.userHasLiked ? 'text-blue-500' : 'text-gray-500'"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+          ></path>
+        </svg>
+        <span class="text-sm">{{ post.likeCount }}</span>
+      </button>
+      <p class="text-gray-600 cursor-pointer">
+        <span class="text-sm">{{ post.likeCount }}</span>
+      </p>
+    </div>
     <p class="text-gray-600 cursor-pointer" (click)="toggleComments()">
       {{ post.Comments.length }} Comments
     </p>
@@ -102,27 +108,30 @@
     *ngIf="isEditing"
     class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
   >
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h3 class="text-lg font-semibold mb-4 text-gray-800">Update Post</h3>
+    <div class="bg-gray-300 p-6 rounded-lg shadow-md">
+      <div class="text-3xl mb-3 text-center font-serif text-black">
+        Update Post
+      </div>
+      <hr class="shadow-lg mb-2 w-full bg-white" />
       <input
         [(ngModel)]="updatedTitle"
         placeholder="Title"
-        class="w-full mb-2 p-2 border rounded-md"
+        class="w-full mb-2 p-2 border rounded-md text-black"
       />
       <input
         [(ngModel)]="updatedLocation"
         placeholder="Location"
-        class="w-full mb-2 p-2 border rounded-md"
+        class="w-full mb-2 p-2 border rounded-md text-black"
       />
       <div class="flex justify-end">
         <button
-          class="px-4 py-2 bg-gray-300 rounded-md mr-2"
+          class="px-4 py-2 bg-red-500 rounded-md mr-2 text-white w-full"
           (click)="closeUpdateModal()"
         >
           Cancel
         </button>
         <button
-          class="px-4 py-2 bg-blue-500 text-white rounded-md"
+          class="px-4 py-2 bg-green-500 text-white rounded-md w-full"
           (click)="saveUpdate()"
         >
           Save
