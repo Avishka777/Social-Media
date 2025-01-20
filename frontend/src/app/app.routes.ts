@@ -7,9 +7,9 @@ import { RegisterComponent } from './register/register.component';
 import { PostCreateComponent } from './post-create/post-create.component';
 
 export const routes: Routes = [
-  { path: 'profile', component: ProfileComponent }, 
+  { path: 'profile', component: ProfileComponent ,canActivate: [AuthGuard] }, 
   { path: '', component: PostListComponent, canActivate: [AuthGuard]  }, 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'create-post', component: PostCreateComponent },
+  { path: 'create-post', component: PostCreateComponent ,canActivate: [AuthGuard] },
 ];

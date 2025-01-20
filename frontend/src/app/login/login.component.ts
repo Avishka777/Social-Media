@@ -39,14 +39,21 @@ export class LoginComponent {
         // If token is received, store it in localStorage
         if (response.token) {
           localStorage.setItem('authToken', response.token);
-          this.router.navigate(['/']);
+          localStorage.setItem('firstName', response.firstName);
+          localStorage.setItem('lastName', response.lastName);
+
+          // Navigate to home page
+          this.router.navigate(['/']).then(() => {
+            // Refresh the home page
+            window.location.reload();
+          });
         }
         this.loading = false;
       },
       (error) => {
         let errorMessage = 'Login failed. Please try again.';
         if (error?.error?.error) {
-          errorMessage = error.error.error; 
+          errorMessage = error.error.error;
         }
 
         Swal.fire({

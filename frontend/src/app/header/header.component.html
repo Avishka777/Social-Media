@@ -1,6 +1,4 @@
-<header
-  class="bg-gray-300 backdrop-blur-md w-full shadow-md"
->
+<header class="bg-gray-300 backdrop-blur-md w-full shadow-md">
   <div class="container mx-auto flex items-center justify-between px-6 py-4">
     <!-- Logo Section -->
     <div class="logo">
@@ -27,6 +25,30 @@
         class="text-black hover:text-blue-500 transition duration-300"
         >Create Post</a
       >
+
+      <!-- Conditional Buttons based on Login Status -->
+      <ng-container *ngIf="isLoggedIn; else notLoggedIn">
+        <button
+          (click)="signOut()"
+          class="text-black hover:text-red-500 transition duration-300"
+        >
+          Sign Out
+        </button>
+      </ng-container>
+
+      <!-- Template for Not Logged In -->
+      <ng-template #notLoggedIn>
+        <a
+          routerLink="/login"
+          class="text-black hover:text-blue-500 transition duration-300"
+          >Login</a
+        >
+        <a
+          routerLink="/register"
+          class="text-black hover:text-blue-500 transition duration-300"
+          >Register</a
+        >
+      </ng-template>
     </nav>
   </div>
 </header>
