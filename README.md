@@ -36,7 +36,7 @@ This project is a full-stack social media application developed using Angular fo
 - **Node.js**
 - **Express.js**
 - **Socket.IO**
-- **MongoDB**
+- **MYSQL**
 - **JWT for Authentication**
 
 ### Frontend:
