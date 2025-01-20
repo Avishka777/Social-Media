@@ -13,11 +13,11 @@ import { PostcardComponent } from '../postcard/postcard.component';
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent implements OnInit {
-  posts: any[] = []; // Holds all posts fetched from the backend
-  isEditing: boolean = false; // Tracks if a post is in editing mode
-  currentPostId: number | null = null; // Tracks the ID of the post being edited
-  updatedTitle: string = ''; // Holds the updated title during edit
-  updatedLocation: string = ''; // Holds the updated location during edit
+  posts: any[] = []; 
+  isEditing: boolean = false; 
+  currentPostId: number | null = null; 
+  updatedTitle: string = ''; 
+  updatedLocation: string = ''; 
 
   constructor(private http: HttpClient) {}
 
@@ -76,7 +76,6 @@ export class PostListComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          // Update the local posts array with the new data
           const index = this.posts.findIndex(
             (post) => post.id === this.currentPostId
           );
@@ -87,7 +86,7 @@ export class PostListComponent implements OnInit {
               location: this.updatedLocation,
             };
           }
-          this.cancelEditing(); // Exit editing mode
+          this.cancelEditing(); 
         },
         error: (err) => {
           console.error('Error updating the post:', err);
@@ -104,7 +103,6 @@ export class PostListComponent implements OnInit {
       .delete(`http://localhost:3000/posts/${postId}`, { headers })
       .subscribe({
         next: () => {
-          // Remove the deleted post from the local posts array
           this.posts = this.posts.filter((post) => post.id !== postId);
         },
         error: (err) => {

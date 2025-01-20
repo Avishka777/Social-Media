@@ -33,7 +33,6 @@ exports.createPost = async (req, res) => {
 
 // Update a post  -----------------------------------------------------------
 exports.updatePost = async (req, res) => {
-  // Perform validation inside the controller
   await body("title")
     .optional()
     .notEmpty()
@@ -41,7 +40,6 @@ exports.updatePost = async (req, res) => {
     .run(req);
   await body("location").optional().run(req);
 
-  // Collect validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -122,7 +120,7 @@ exports.getAllPosts = async (req, res) => {
         include: [
           [
             sequelize.fn("COUNT", sequelize.col("Likes.id")),
-            "likeCount", // This will add the count of likes as 'likeCount'
+            "likeCount", 
           ],
         ],
       },

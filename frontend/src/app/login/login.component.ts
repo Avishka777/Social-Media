@@ -36,7 +36,6 @@ export class LoginComponent {
 
     this.http.post('http://localhost:3000/users/login', loginData).subscribe(
       (response: any) => {
-        // If token is received, store it in localStorage
         if (response.token) {
           localStorage.setItem('authToken', response.token);
           localStorage.setItem('firstName', response.firstName);
@@ -44,7 +43,6 @@ export class LoginComponent {
 
           // Navigate to home page
           this.router.navigate(['/']).then(() => {
-            // Refresh the home page
             window.location.reload();
           });
         }

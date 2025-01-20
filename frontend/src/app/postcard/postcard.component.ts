@@ -20,10 +20,10 @@ export class PostcardComponent implements OnInit {
   updatedTitle: string = '';
   updatedLocation: string = '';
   private socket: Socket;
-  isOwner: boolean = false; // Variable to track if the user is the owner of the post
+  isOwner: boolean = false; 
+  newComment: string = '';
 
   constructor(private http: HttpClient) {
-    // Initialize socket connection
     this.socket = io('http://localhost:3000');
   }
 
@@ -31,7 +31,7 @@ export class PostcardComponent implements OnInit {
     // Listen for real-time updates
     this.socket.on('postUpdated', (updatedPost: any) => {
       if (this.post.id === updatedPost.id) {
-        this.post = { ...this.post, ...updatedPost }; // Update post data
+        this.post = { ...this.post, ...updatedPost }; 
       }
     });
 
@@ -39,11 +39,9 @@ export class PostcardComponent implements OnInit {
     this.socket.on('postDeleted', (data: any) => {
       if (this.post.id === data.id) {
         Swal.fire('Deleted!', 'This post has been deleted.', 'info');
-        this.post = null; // Handle removal locally (or notify parent component)
+        this.post = null; 
       }
     });
-
-    // Check if the logged-in user is the owner of the post
     this.checkOwnership();
   }
 
@@ -52,7 +50,6 @@ export class PostcardComponent implements OnInit {
     const storedLastName = localStorage.getItem('lastName');
 
     if (storedFirstName && storedLastName) {
-      // Compare post owner name with logged-in user's name
       this.isOwner =
         this.post.User.firstName === storedFirstName &&
         this.post.User.lastName === storedLastName;
@@ -62,6 +59,34 @@ export class PostcardComponent implements OnInit {
   // Toggle comment section visibility
   toggleComments() {
     this.commentsVisible = !this.commentsVisible;
+  }
+
+  // Add a new comment
+  addComment() {
+    const token = localStorage.getItem('authToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const payload = { content: this.newComment };
+
+    if (!this.newComment.trim()) {
+      Swal.fire('Error!', 'Comment cannot be empty.', 'error');
+      return;
+    }
+
+    this.http
+      .post(`http://localhost:3000/comment/${this.post.id}`, payload, {
+        headers,
+      })
+      .subscribe(
+        (response: any) => {
+          Swal.fire('Success!', 'Comment added successfully.', 'success');
+          this.post.comments.push(response.comment); 
+          this.newComment = ''; 
+        },
+        (error) => {
+          Swal.fire('Error!', 'Failed to add comment.', 'error');
+          console.error('Error adding comment:', error);
+        }
+      );
   }
 
   // Like the post
@@ -128,7 +153,7 @@ export class PostcardComponent implements OnInit {
           .subscribe(
             () => {
               Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
-              this.socket.emit('postDeleted', { id: this.post.id }); // Emit delete event for real-time updates
+              this.socket.emit('postDeleted', { id: this.post.id });
             },
             (error) => {
               Swal.fire('Error!', 'Failed to delete the post.', 'error');
@@ -169,8 +194,8 @@ export class PostcardComponent implements OnInit {
       .subscribe(
         (updatedPost: any) => {
           Swal.fire('Updated!', 'Your post has been updated.', 'success');
-          this.post = { ...this.post, ...updatedPost }; // Update post locally
-          this.socket.emit('postUpdated', updatedPost); // Emit real-time update
+          this.post = { ...this.post, ...updatedPost };
+          this.socket.emit('postUpdated', updatedPost);
           this.closeUpdateModal();
         },
         (error) => {

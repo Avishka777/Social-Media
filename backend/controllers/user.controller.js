@@ -19,7 +19,6 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ error: "Email already exists" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create the user
@@ -43,7 +42,6 @@ exports.registerUser = async (req, res) => {
 
 // Login user -----------------------------------------------------------------
 exports.loginUser = async (req, res) => {
-  // Validation logic
   await body("email").isEmail().withMessage("Invalid email address").run(req);
   await body("password")
     .notEmpty()
@@ -92,7 +90,7 @@ exports.loginUser = async (req, res) => {
 // Update user details  -------------------------------------------------------
 exports.updateUser = async (req, res) => {
   const { firstName, lastName, birthday } = req.body;
-  const userId = req.user.id; // Access the authenticated user from the JWT
+  const userId = req.user.id;
 
   try {
     const user = await User.findByPk(userId);

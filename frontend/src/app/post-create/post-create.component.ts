@@ -16,7 +16,7 @@ export class PostCreateComponent {
   post = {
     title: '',
     location: '',
-    image: null as File | null, // Set image to either File or null
+    image: null as File | null, 
   };
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -35,21 +35,17 @@ export class PostCreateComponent {
     formData.append('title', this.post.title);
     formData.append('location', this.post.location);
 
-    // Only append image if it's not null
     if (this.post.image) {
-      formData.append('image', this.post.image, this.post.image.name); // Use file name if available
+      formData.append('image', this.post.image, this.post.image.name); 
     }
 
-    // Get the auth token from localStorage
     const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    // Send post request to create the post
     this.http
       .post('http://localhost:3000/posts/create', formData, { headers })
       .subscribe({
         next: (response: any) => {
-          // Show success message with SweetAlert
           Swal.fire({
             title: 'Success!',
             text: 'Post created successfully',
@@ -57,7 +53,6 @@ export class PostCreateComponent {
             confirmButtonText: 'OK',
           }).then((result) => {
             if (result.isConfirmed) {
-              // Navigate to home page after success
               this.router.navigate(['/']);
             }
           });

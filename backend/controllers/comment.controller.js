@@ -3,7 +3,6 @@ const { body, validationResult } = require("express-validator");
 
 // Add a comment    -----------------------------------------------------------
 exports.addComment = async (req, res) => {
-  // Perform validation inside the controller
   await body("content").notEmpty().withMessage("Content is required").run(req);
 
   // Collect validation errors
@@ -50,7 +49,6 @@ exports.getCommentsByPost = async (req, res) => {
 exports.updateComment = async (req, res) => {
   const { commentId } = req.params;
 
-  // Perform validation inside the controller
   await body("content")
     .notEmpty()
     .withMessage("Content cannot be empty")

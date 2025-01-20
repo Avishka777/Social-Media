@@ -103,6 +103,22 @@
     </div>
   </div>
 
+  <!-- Add Comment Section -->
+  <div class="mt-4" *ngIf="commentsVisible">
+    <textarea
+      [(ngModel)]="newComment"
+      placeholder="Write a comment..."
+      class="w-full p-2 border rounded-md text-black"
+      rows="2"
+    ></textarea>
+    <button
+      class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md w-full"
+      (click)="addComment()"
+    >
+      Add Comment
+    </button>
+  </div>
+
   <!-- Update Modal -->
   <div
     *ngIf="isEditing"
